@@ -61,10 +61,16 @@ public class LevelController : MonoBehaviour
         {
             TimesText.gameObject.SetActive(!TimesText.gameObject.activeInHierarchy);
         }
+
+        if (Input.GetKey(KeyCode.M))
+        {
+            Grass.FirstOrDefault(m => !m.Mowed)?.Mow();
+        }
         
         if (GameOver)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            //if (Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetButtonDown("A"))
             {
                 GameOver = false;
                 Time.timeScale = 1;
@@ -73,7 +79,8 @@ public class LevelController : MonoBehaviour
         }
         else if (Complete)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            //if (Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetButtonDown("A"))
             {
                 Complete = false;
                 Time.timeScale = 1;
@@ -113,7 +120,6 @@ public class LevelController : MonoBehaviour
                 return;
             }
             var angle = Mathf.Rad2Deg * (Mathf.Atan2(b.z - a.z, b.x - a.x));
-            Debug.Log(angle);
 
             if (b.x >= a.x && b.z <= a.z)
             {
@@ -163,6 +169,7 @@ public class LevelController : MonoBehaviour
 
     void SetGameOver()
     {
+        UpdateDisplays();
         GameOverText.gameObject.SetActive(true);
         Time.timeScale = 0;
         GameOver = true;
@@ -197,7 +204,7 @@ public class LevelController : MonoBehaviour
         TimesText.text = timesText;
     }
 
-    private string GetTimeString(float seconds)
+    public static string GetTimeString(float seconds)
     {
         var time = TimeSpan.FromSeconds(seconds);
         var minutes = Math.Floor((time.TotalMinutes));

@@ -107,16 +107,18 @@ public class MowerController : MonoBehaviour
         var moving = false;
         var forward = Body.transform.forward;
         BoostFactor = 1;
-        if (Input.GetKey(KeyCode.UpArrow))
+        //if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetButton("A"))
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetButton("C") || (Input.GetAxis("C") < -.1f || Input.GetAxis("C") > .1f) )
             {
                 BoostFactor = 3f;
             }
             Body.AddForce(forward * SpeedFactor * BoostFactor);
             moving = true;
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+        //else if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetButton("B"))
         {
             Body.AddForce(forward * -SpeedFactor);
             moving = true;
@@ -124,11 +126,15 @@ public class MowerController : MonoBehaviour
 
         if (moving)
         {
-            if (Input.GetKey(KeyCode.LeftArrow))
+            var horizontal = Input.GetAxis("Horizontal");
+            Debug.Log(horizontal);
+            //if (Input.GetKey(KeyCode.LeftArrow))
+            if(horizontal < -.1f)
             {
                 Body.AddRelativeTorque(Vector3.up * -TurnFactor * BoostFactor, ForceMode.Acceleration);
             }
-            else if (Input.GetKey(KeyCode.RightArrow))
+            //else if (Input.GetKey(KeyCode.RightArrow))
+            else if(horizontal > .1f)
             {
                 Body.AddRelativeTorque(Vector3.up * TurnFactor * BoostFactor, ForceMode.Acceleration);
             }
@@ -141,6 +147,11 @@ public class MowerController : MonoBehaviour
         if (Fuel > MaxFuel)
         {
             Fuel = MaxFuel;
+        }
+
+        if (Fuel < 0)
+        {
+            Fuel = 0;
         }
     }
 
