@@ -91,10 +91,10 @@ public class LevelController : MonoBehaviour
             TimesText.gameObject.SetActive(!TimesText.gameObject.activeInHierarchy);
         }
 
-        if (Input.GetKey(KeyCode.M))
-        {
-            Grass.FirstOrDefault(m => !m.Mowed)?.Mow();
-        }
+        // if (Input.GetKey(KeyCode.M))
+        // {
+        //     Grass.FirstOrDefault(m => !m.Mowed)?.Mow();
+        // }
         
         if (GameOver)
         {
