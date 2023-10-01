@@ -9,7 +9,9 @@ public class GrassController : MonoBehaviour
 {
     [SerializeField] ParticleSystem MowParticle;
     [SerializeField] GameObject Grass;
+    [SerializeField] List<AudioSource> BladeAudio;
 
+    public static event Action OnMow;
     public bool Mowed;
     
     void Start()
@@ -38,6 +40,7 @@ public class GrassController : MonoBehaviour
             Mowed = true;
             Grass.gameObject.SetActive(false);
             MowParticle.Play();
+            OnMow?.Invoke();
         }
     }
 }

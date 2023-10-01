@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class RockController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] public AudioSource RockAudio;
+    
     void Start()
     {
         
@@ -25,6 +26,7 @@ public class RockController : MonoBehaviour
             controller.Body.AddForceAtPosition(controller.transform.position - transform.position * 1.7f, contact.point, ForceMode.Impulse);
             controller.ShakeCamera(.2f, .2f);
             controller.AddFuel(-20);
+            RockAudio.Play();
         }
     }
 }

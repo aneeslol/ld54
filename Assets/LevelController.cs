@@ -5,7 +5,9 @@ using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class LevelController : MonoBehaviour
@@ -25,6 +27,7 @@ public class LevelController : MonoBehaviour
     public GameObject FuelCan = null;
     public static bool GameOver = false;
     public static bool Complete = false;
+    public static bool HardMode = false;
 
     [SerializeField] public MeterController ProgressMeter;
     [SerializeField] public MeterController FuelMeter;
@@ -32,6 +35,12 @@ public class LevelController : MonoBehaviour
     private List<GrassController> Grass = new List<GrassController>();
     private int TotalGrass = 0;
     private float ElapsedTime;
+    [SerializeField] public List<AudioSource> BladeAudio;
+    [SerializeField] public AudioSource FlowerAudio;
+    [SerializeField] public AudioSource FuelAudio;
+    [SerializeField] public AudioMixer AudioMixer;
+    [SerializeField] public Text VolumeText;
+    [SerializeField] public TMP_Text LevelText;
     
     void Start()
     {
@@ -44,15 +53,35 @@ public class LevelController : MonoBehaviour
         TotalGrass = Grass.Count;
         FuelController.OnFuelCollected += ResetFuelTimer;
         MowerController.OnFuelEmpty += SetGameOver;
+        GrassController.OnMow += OnMow;
+        FlowerController.OnMow += OnFlowerMow;
 
         ProgressMeter.SetColor(new Color(0, .69f, .05f));
         FuelMeter.SetColor(new Color(.69f, .05f, .05f));
+        
+        AudioMixer.GetFloat("Volume", out var volume);
+        if (volume == 0)
+        {
+            VolumeText.text = "Volume: 100%";
+        }
+        else if (volume == -20f)
+        {
+            VolumeText.text = "Volume: 50%";
+        }
+        else if (volume == -80f)
+        {
+            VolumeText.text = "Volume: 0%";
+        }
+
+        LevelText.text = "LEVEL " + Level;
     }
 
     private void OnDestroy()
     {
         FuelController.OnFuelCollected -= ResetFuelTimer;
         MowerController.OnFuelEmpty -= SetGameOver;
+        GrassController.OnMow -= OnMow;
+        FlowerController.OnMow -= OnFlowerMow;
     }
 
     void Update()
@@ -162,6 +191,7 @@ public class LevelController : MonoBehaviour
 
     void ResetFuelTimer()
     {
+        FuelAudio.Play();
         Mower.HideFuelIndicators();
         FuelSpawnTimer = FuelSpawnTimerMax;
         FuelSpawned = false;
@@ -185,7 +215,7 @@ public class LevelController : MonoBehaviour
         if (count == TotalGrass)
         {
             CompleteText.gameObject.SetActive(true);
-            Data.LevelTimes[Level] = ElapsedTime;
+            Data.LevelTimes[Level - 1] = ElapsedTime;
             Time.timeScale = 0;
             Complete = true;
         }
@@ -209,5 +239,35 @@ public class LevelController : MonoBehaviour
         var time = TimeSpan.FromSeconds(seconds);
         var minutes = Math.Floor((time.TotalMinutes));
         return minutes + ":" + time.ToString(@"ss\.ff");
+    }
+
+    public void OnMow()
+    {
+        var index = Random.Range(0, 2);
+        BladeAudio[index].Play();
+    }
+    public void OnFlowerMow()
+    {
+        FlowerAudio.Play();
+    }
+
+    public void ToggleVolume()
+    {
+        AudioMixer.GetFloat("Volume", out var volume);
+        if (volume == 0)
+        {
+            AudioMixer.SetFloat("Volume", -20);
+            VolumeText.text = "Volume: 50%";
+        }
+        else if(volume == -20f)
+        {
+            AudioMixer.SetFloat("Volume", -80);
+            VolumeText.text = "Volume: 0%";
+        }
+        else if(volume == -80f)
+        {
+            AudioMixer.SetFloat("Volume", 0);
+            VolumeText.text = "Volume: 100%";
+        }
     }
 }

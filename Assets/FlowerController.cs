@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class FlowerController : MonoBehaviour
     [SerializeField] GameObject Flower;
 
     public bool Mowed;
+    public static event Action OnMow;
     
     void Start()
     {
@@ -38,5 +40,6 @@ public class FlowerController : MonoBehaviour
         Mowed = true;
         Flower.gameObject.SetActive(false);
         MowParticle.Play();
+        OnMow?.Invoke();
     }
 }

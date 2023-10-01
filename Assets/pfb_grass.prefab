@@ -49,6 +49,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MowParticle: {fileID: 8987388680359948058}
   Grass: {fileID: 8055717993934681849}
+  BladeAudio:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Mowed: 0
 --- !u!54 &5645603492209478446
 Rigidbody:

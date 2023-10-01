@@ -20,18 +20,25 @@ public class MowerController : MonoBehaviour
 
     [SerializeField] public List<GameObject> FuelIndicators;
     [SerializeField] public GameObject FuelIndicatorParent;
+    [SerializeField] public AudioSource DriveAudio;
+    [SerializeField] public AudioSource BoostAudio;
+    private Tween DriveAudioTween;
+    private Tween BoostAudioTween;
 
     public static event Action OnFuelEmpty;
     public float BoostFactor = 1;
 
     private float CameraShakeTimer = 0;
     private float CameraShakeFactor = 1;
-    
+
     void Start()
     {
-        
+        if (LevelController.HardMode)
+        {
+            Body.drag = 1;
+        }
     }
-    
+
     void Update()
     {
         if (!LevelController.GameOver && !LevelController.Complete)
@@ -45,17 +52,26 @@ public class MowerController : MonoBehaviour
 
             if (BoostFactor > 1)
             {
+                if (BoostAudioTween == null)
+                {
+                    BoostAudioTween = BoostAudio.DOFade(1, .2f);
+                }
                 BoostParticle.Play();
                 BoostCollider.enabled = true;
             }
             else
             {
+                BoostAudioTween.Kill();
+                BoostAudioTween = null;
+                BoostAudio.DOFade(0, .2f);
                 BoostParticle.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
                 BoostCollider.enabled = false;
             }
         }
         else
         {
+            BoostAudio.DOFade(0, .2f);
+            DriveAudio.DOFade(0, .2f);
             BoostParticle.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
     }
@@ -76,6 +92,7 @@ public class MowerController : MonoBehaviour
         {
             CameraShakeFactor = Math.Max(.1f, CameraShakeFactor);
         }
+
         if (CameraShakeTimer > 0 || BoostFactor > 1)
         {
             cameraShakeOffset = Vector3.one * Random.Range(-CameraShakeFactor, CameraShakeFactor);
@@ -84,7 +101,7 @@ public class MowerController : MonoBehaviour
         {
             CameraShakeFactor = 0f;
         }
-        
+
         Camera.main.transform.localPosition = cameraShakeOffset + new Vector3(
             localPosition.x + .75f,
             27,
@@ -110,13 +127,15 @@ public class MowerController : MonoBehaviour
         //if (Input.GetKey(KeyCode.UpArrow))
         if (Input.GetButton("A"))
         {
-            if (Input.GetButton("C") || (Input.GetAxis("C") < -.1f || Input.GetAxis("C") > .1f) )
+            if (Input.GetButton("C"))
             {
                 BoostFactor = 3f;
             }
+
             Body.AddForce(forward * SpeedFactor * BoostFactor);
             moving = true;
         }
+
         //else if (Input.GetKey(KeyCode.DownArrow))
         if (Input.GetButton("B"))
         {
@@ -126,18 +145,28 @@ public class MowerController : MonoBehaviour
 
         if (moving)
         {
+            if (DriveAudioTween == null)
+            {
+                DriveAudioTween = DriveAudio.DOFade(1, .2f);
+            }
+
             var horizontal = Input.GetAxis("Horizontal");
-            Debug.Log(horizontal);
             //if (Input.GetKey(KeyCode.LeftArrow))
-            if(horizontal < -.1f)
+            if (horizontal < -.4f)
             {
                 Body.AddRelativeTorque(Vector3.up * -TurnFactor * BoostFactor, ForceMode.Acceleration);
             }
             //else if (Input.GetKey(KeyCode.RightArrow))
-            else if(horizontal > .1f)
+            else if (horizontal > .4f)
             {
                 Body.AddRelativeTorque(Vector3.up * TurnFactor * BoostFactor, ForceMode.Acceleration);
             }
+        }
+        else
+        {
+            DriveAudioTween?.Kill();
+            DriveAudioTween = null;
+            DriveAudio.DOFade(0, .2f);
         }
     }
 

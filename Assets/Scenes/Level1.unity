@@ -9047,6 +9047,14 @@ PrefabInstance:
       propertyPath: FuelIndicators.Array.data[7]
       value: 
       objectReference: {fileID: 1014860018}
+    - target: {fileID: 4039488608725425353, guid: b4b7b6b5eb6220345b20c18acfb714c0, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8148698454245199881, guid: b4b7b6b5eb6220345b20c18acfb714c0, type: 3}
+      propertyPath: Level
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8148698454339545437, guid: b4b7b6b5eb6220345b20c18acfb714c0, type: 3}
       propertyPath: m_fontAsset
       value: 
