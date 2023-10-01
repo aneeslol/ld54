@@ -4,5 +4,38 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Level1.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Level2.unity
+    guid: 49b87b1937031134083db7a655b38e81
+  - enabled: 1
+    path: Assets/Scenes/Level3.unity
+    guid: 980ec78172d089f40b24a28f1fd2b9fb
+  - enabled: 1
+    path: Assets/Scenes/Level4.unity
+    guid: 12d692a524b1564479c8d4a8d3c16093
+  - enabled: 1
+    path: Assets/Scenes/Level5.unity
+    guid: 788acb06d7e98094380d6c91a7c139f3
+  - enabled: 1
+    path: Assets/Scenes/Level6.unity
+    guid: 81f0d7f62170f6249a61ae33681072e7
+  - enabled: 1
+    path: Assets/Scenes/Level7.unity
+    guid: 1b215c2b47638e447aba949349b9fcac
+  - enabled: 1
+    path: Assets/Scenes/Level8.unity
+    guid: eaa15616922121c45b866fcb58fa3441
+  - enabled: 1
+    path: Assets/Scenes/Level9.unity
+    guid: ac269280409ec1b4198e2185adf914e4
+  - enabled: 1
+    path: Assets/Scenes/Level10.unity
+    guid: a12a74c9f35d11d4686a4cccc62794f8
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: b82095648174b0949b58e0d19ecb78cc
   m_configObjects: {}
